@@ -1,20 +1,14 @@
 mod cli;
 mod generator;
+mod champions;
+
+use crate::generator::{get_random_champions};
+use std::env;
 
 fn main() {
-    cli::run();
-}
-
-fn test2() -> i32 {
-    5
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_test1() {
-        assert_eq!(5, test2());
-    }
+    // cli::run();
+    
+    let args: Vec<String> = env::args().collect();
+    let champions = get_random_champions(args[1].parse::<usize>().unwrap());
+    println!("{champions:?}");
 }
