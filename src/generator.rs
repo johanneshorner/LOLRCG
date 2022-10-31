@@ -1,7 +1,6 @@
-use crate::champions::CHAMPIONS;
 use rand::seq::SliceRandom;
 
-pub fn get_random_champions_from_seq<'a>(
+pub fn get_random_champions_from_pool<'a>(
     amount: usize,
     champions: &[&'a str],
 ) -> Vec<&'a str> {
@@ -13,20 +12,17 @@ pub fn get_random_champions_from_seq<'a>(
         .collect::<Vec<&str>>()
 }
 
-pub fn get_random_champions<'a>(amount: usize) -> Vec<&'a str> {
-    get_random_champions_from_seq(amount, CHAMPIONS)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::champions::CHAMPIONS;
 
     #[test]
     fn all_distinct_champions() {
         let mut all_champions = CHAMPIONS.to_vec();
         all_champions.sort();
 
-        let mut all_random_champions = get_random_champions(CHAMPIONS.len());
+        let mut all_random_champions = get_random_champions_from_pool(CHAMPIONS.len(), CHAMPIONS);
         all_random_champions.sort();
 
         assert_eq!(all_champions, all_random_champions);
@@ -36,7 +32,7 @@ mod tests {
     fn custom_distinct_champions() {
         let mut champion_pool = vec![ "Champion1", "Champion4", "Champion3", "Champion2", "Champion5" ];
 
-        let mut random_champions = get_random_champions_from_seq(champion_pool.len(), &champion_pool);
+        let mut random_champions = get_random_champions_from_pool(champion_pool.len(), &champion_pool);
 
         champion_pool.sort();
         random_champions.sort();
