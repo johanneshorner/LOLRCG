@@ -1,4 +1,4 @@
-use std::io::Write;
+use std::io::{Read, Write};
 
 use crate::champions::CHAMPIONS;
 use crate::generator::get_random_champions_from_pool;
@@ -22,21 +22,35 @@ pub fn run() {
         CHAMPIONS.to_vec()
     };
 
-    let amount = if let Some(amount) = args.amount {
-        amount
-    }
-    else {
-        print!("Number of champions to generate: "); 
-        std::io::stdout().flush().unwrap();
-        let line = std::io::stdin().lines().next().unwrap().unwrap(); 
-        line.parse::<usize>().unwrap()
+    let print_champions = |amount: usize| {
+        if amount > champion_pool.len() {
+            println!("Amount of random champions {{{}}} can't be greater than the size of the specified champion pool {{{}}}!", amount, champion_pool.len());
+            return;
+        }
+
+        let random_champions = get_random_champions_from_pool(amount, &champion_pool);
+        println!("{}", random_champions.join("\n"));
     };
 
-    if amount > champion_pool.len() {
-        println!("Amount of random champions {{{}}} can't be greater than the size of the specified champion pool {{{}}}!", amount, champion_pool.len());
-        return;
-    }
+    if let Some(amount) = args.amount {
+        print_champions(amount);
+    } else {
+        loop {
+            print!("Number of champions to generate: ");
+            std::io::stdout().flush().unwrap();
+            let line = std::io::stdin().lines().next().unwrap().unwrap();
 
-    let random_champions = get_random_champions_from_pool(amount, &champion_pool);
-    println!("{}", random_champions.join("\n"));
+            if let Ok(amount) = line.parse::<usize>()  {
+                if amount > champion_pool.len() || amount == 0 {
+                    println!("Please input a valid number in the range of 1 - {}", champion_pool.len());
+                } else {
+                    print_champions(amount);
+                }
+            } else {
+                println!("Please input a valid number in the range of 1 - {}", champion_pool.len());
+            }
+
+            println!();
+        }
+    };
 }
