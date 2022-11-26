@@ -1,4 +1,4 @@
-use std::io::{Read, Write};
+use std::io::{Write};
 
 use crate::champions::CHAMPIONS;
 use crate::generator::get_random_champions_from_pool;
@@ -28,7 +28,7 @@ pub fn run() {
             return;
         }
 
-        let random_champions = get_random_champions_from_pool(amount, &champion_pool);
+        let random_champions = get_random_champions_from_pool(amount, champion_pool.iter().cloned());
         println!("{}", random_champions.join("\n"));
     };
 
