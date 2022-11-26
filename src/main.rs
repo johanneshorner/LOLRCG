@@ -1,7 +1,5 @@
-mod cli;
-mod generator;
-mod champions;
+mod gui;
 
 fn main() {
-    cli::run();
+    gui::run().unwrap();
 }
